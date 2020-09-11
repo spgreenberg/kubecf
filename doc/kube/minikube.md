@@ -11,16 +11,16 @@ the intended deployment.
 
 ## Deployment and teardown
 
-For developing with Minikube, start a local cluster by running the `start` target:
+For developing with Minikube, start a local cluster by running the following target:
 
 ```sh
-bazel run //dev/minikube:start
+make minikube-start
 ```
 
 And tear it down again via:
 
 ```sh
-bazel run //dev/minikube:delete
+make minikube-delete
 ```
 
 ## Managing system resources
@@ -54,5 +54,5 @@ environment variable to override the default. E.g. `VM_DRIVER=kvm2`.
 It is possible to set extra minikube options (e.g. to set a docker registry
 mirror) via the environment variable `MINIKUBE_EXTRA_OPTIONS`.  For example:
 ```sh
-export MINIKUBE_EXTRA_OPTIONS="--registry-mirror http://registry.mirror.example:5000/"
+export MINIKUBE_EXTRA_OPTIONS="--registry-mirror https://registry.mirror.example:5000/"
 ```

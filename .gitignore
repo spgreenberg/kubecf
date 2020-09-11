@@ -1,7 +1,5 @@
 *~
 \#*
-_work/
-target/
 password
 *.pem
 .vagrant
@@ -10,7 +8,7 @@ password
 *.vmdk
 personal-setup
 .concourse/config.yaml
-
-/bazel-*
+.envrc
+/*values.yaml
 /output
 /tmp

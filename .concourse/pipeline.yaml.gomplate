@@ -24,11 +24,13 @@ resource_types:
 # Use manually built and pushed image until upstream provides a solution:
 # https://github.com/cloudfoundry-incubator/kubecf/issues/903
 # https://github.com/SUSE/github-pr-resource/commit/3ee0816d801a7038d6125796725aa3718c688b53
+# Also fetch tags for our new versioning system
+# https://github.com/SUSE/github-pr-resource/commit/e92ede5dc3dfb34d715b5d6b38152952399512fb
 - name: pull-request
   type: docker-image
   source:
     repository: splatform/github-pr-resource
-    tag: 3ee0816
+    tag: e92ede5
 
 {{- if $config.github_status }}
 - name: github-status
@@ -118,7 +120,7 @@ resources:
   source:
     uri: https://github.com/SUSE/catapult
   version:
-    ref: 782c1af643fa6d03337a26434ddcd7613441774a
+    ref: 53d070314a3351aff3fcd74c5ea6bf844f3ccbb4
 
 - name: s3.kubecf-ci
   type: s3
@@ -215,7 +217,7 @@ deploy_args: &deploy_args
   sizing:
     diego_cell:
       ephemeral_disk:
-        size: 300000
+        size: 60000
   EOF
   export CONFIG_OVERRIDE
 
@@ -398,7 +400,6 @@ jobs:
       submodules: true
     {{- end }}
     trigger: true
-    version: "every"
     passed:
     - lint-{{ $branch }}
 {{- if has $config.stable_jobs "build" }}
@@ -495,7 +496,6 @@ jobs:
       submodules: true
     {{- end }}
     trigger: true
-    version: "every"
     passed:
     - build-{{ $branch }}
   - get: s3.kubecf-ci
@@ -728,7 +728,6 @@ jobs:
       submodules: true
     {{- end }}
     trigger: true
-    version: "every"
     passed:
     - deploy-{{ $cfScheduler }}-{{ $branch }}
   - get: s3.kubecf-ci
@@ -909,7 +908,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: s3.kubecf-ci
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1078,7 +1076,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: s3.kubecf-ci
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1250,7 +1247,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: s3.kubecf-ci
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1420,7 +1416,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: s3.kubecf-ci
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1588,7 +1583,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: s3.kubecf-ci
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1750,7 +1744,6 @@ jobs:
 #     passed:
 #     - sync-integration-tests-{{ $cfScheduler }}
 #     trigger: true
-#     version: "every"
 #   - get: s3.kubecf-ci
 #     passed:
 #     - sync-integration-tests-{{ $cfScheduler }}
@@ -1819,7 +1812,6 @@ jobs:
     passed:
     - {{ $previousTest | quote }}
     trigger: true
-    version: "every"
   - get: semver.gke-cluster-{{ $config.resource_prefix | strings.Trunc 12 }}-{{ $branch | strings.Trunc 12 }}-{{ $cfScheduler }}
     {{- if $config.workertags }}
     tags: {{ range $config.workertags }}
@@ -1855,7 +1847,6 @@ jobs:
       - {{ . -}}{{ end }}
       {{- end }}
       trigger: true
-      version: "every"
       passed:
       - build-{{ $branch }}
     - get: s3.kubecf-ci
@@ -2010,9 +2001,10 @@ jobs:
         args:
         - -ce
         - |
-          # Revert to original name without the timestamp part
+          # Revert to original name without the timestamp part, then add back `v`
           for file in s3.kubecf-ci*/*.tgz; do
-              new_filename=$(basename $file | sed  's/-[0-9]\+\.tgz/\.tgz/')
+              new_filename=$(basename $file | sed  's/-[0-9]\+\.tgz/\.tgz/' \
+                                            | sed  's/\([0-9]\+\.[0-9]\+\.[0-9]\+\)/v\1/g')
               mv "$file" "output/${new_filename}"
           done
   - task: test-if-file-exists

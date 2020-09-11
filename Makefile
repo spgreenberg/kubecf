@@ -13,7 +13,7 @@ version:
 update-subcharts:
 	@./scripts/update-subcharts.sh
 
-lint: shellcheck yamllint helmlint
+lint: shellcheck yamllint helmlint httplint
 
 helmlint:
 	@./scripts/helmlint.sh
@@ -23,6 +23,13 @@ shellcheck:
 
 yamllint:
 	@./scripts/yamllint.sh
+
+test:
+	./tests/config.sh
+
+.PHONY: httplint
+httplint:
+	@./src/kubecf-tools/httplint/httplint.sh
 
 ########################################################################
 # Build
@@ -63,6 +70,9 @@ cf-login:
 
 cf-operator-apply:
 	@./scripts/cf-operator-apply.sh
+
+cf-operator-delete:
+	@./scripts/cf-operator-delete.sh
 
 cf-operator-wait:
 	@./scripts/cf-operator-wait.sh

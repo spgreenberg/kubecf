@@ -5,7 +5,7 @@ require_tools yamllint
 
 find_args=(
     # Don't lint the helm subcharts; they are imported.
-    -not \( -path "./deploy/helm/kubecf/charts" -prune \)
+    -not \( -path "./chart/charts" -prune \)
 
     # Don't lint any generated output files.
     -not \( -path "./output" -prune \)
@@ -16,9 +16,21 @@ find_args=(
     # Only lint values.yaml file in the kubecf static files
     # the rest contain template expressions that must be
     # evaluated before the files become valid YAML.
-    \( -path "./deploy/helm/kubecf/values.*"
+    \( -path "./chart/values.*"
        -or
-       -not -path "./deploy/helm/kubecf/*"
+       -path "./chart/config/*"
+       -or
+       -not -path "./chart/*"
+    \)
+    \( -path "./mixins/*/values.*"
+       -or
+       -path "./mixins/*/config/*"
+       -or
+       -not -path "./mixins/*"
+    \)
+    \( -path "./tests/config/values.*"
+       -or
+       -not -path "./tests/config/*"
     \)
 
     # Check both file extensions, although we should have only .yaml files.

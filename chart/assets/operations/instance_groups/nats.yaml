@@ -1,0 +1,26 @@
+# Add quarks properties.
+- type: replace
+  path: /instance_groups/name=nats/jobs/name=nats/properties/quarks?
+  value:
+    ports:
+    - name: nats
+      protocol: TCP
+      internal: 4222
+    - name: nats-routes
+      protocol: TCP
+      internal: 4223
+    - name: nats-tls
+      protocol: TCP
+      internal: 4224
+    - name: nats-tls-routes
+      protocol: TCP
+      internal: 4225
+    run:
+      healthcheck:
+        nats:
+          readiness:
+            exec:
+              command:
+              - sh
+              - -c
+              - ss -nlt sport = 4222 | grep "LISTEN.*:4222" && ss -nlt sport = 4223 | grep "LISTEN.*:4223"
