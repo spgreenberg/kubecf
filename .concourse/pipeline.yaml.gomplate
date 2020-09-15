@@ -120,7 +120,7 @@ resources:
   source:
     uri: https://github.com/HCL-Cloud-Native-Labs/catapult-1
   version:
-    ref: bcbbab2ea26b26807c1eb9104fda0b26f4607912
+    ref: 4846985fb8026e086f4cdee8d9263bb2fc052ee0
 
 - name: s3.kubecf-ci
   type: s3
