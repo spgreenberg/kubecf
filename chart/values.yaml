@@ -140,19 +140,19 @@ sizing:
 #  External endpoints are created for the instance groups only if features.ingress.enabled is false.
 services:
   router:
-    annotations: ~
+    annotations: {}
     type: LoadBalancer
     externalIPs: []
     clusterIP: ~
     loadBalancerIP: ~
   ssh-proxy:
-    annotations: ~
+    annotations: {}
     type: LoadBalancer
     externalIPs: []
     clusterIP: ~
     loadBalancerIP: ~
   tcp-router:
-    annotations: ~
+    annotations: {}
     type: LoadBalancer
     externalIPs: []
     clusterIP: ~
@@ -313,6 +313,8 @@ features:
     # https://kubecf.suse.dev/docs/getting-started/kubernetes-deploy/#external-database for details.
     # See also features.external_database.
     enabled: true
+    # Number of seconds to wait for the database to be ready, per iteration of the waiter loop
+    connect_timeout: 3
   blobstore:
     # Possible values for provider: singleton and s3.
     provider: singleton
