@@ -314,7 +314,7 @@ spec:
               - name: "NFSPERSI_ENABLED"
                 value: "true"
               - name: "EIRINIPERSI_ENABLED"
-                value: "true"
+                value: "{{ .Values.features.eirini.enabled }}"
               - name: "SYSLOG_FORWARDING_ENABLED"
                 value: "true"
               - name: "AUTOSCALER_ENABLED"
