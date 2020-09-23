@@ -264,7 +264,7 @@ spec:
           containers:
           - command:
             - /bin/run.sh
-            image: brains
+            image: ghcr.io/cloudfoundry-incubator/brain-tests:test
             name: brain-tests
             env:
               - name: "CF_DOMAIN"
