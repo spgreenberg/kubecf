@@ -268,13 +268,19 @@ spec:
             name: brain-tests
             env:
               - name: "CF_DOMAIN"
-                value: "((system_domain))"
+                valueFrom:
+                  secretKeyRef:
+                    name: var-system-domain
+                    key: value
               - name: "CF_TCP_DOMAIN"
-                value: "tcp.((system_domain))"
+                value: "tcp.$(CF_DOMAIN)"
               - name: "CF_USERNAME"
                 value: "admin"
               - name: "CF_PASSWORD"
-                value: "((cf_admin_password))"
+                valueFrom:
+                  secretKeyRef:
+                    name: var-cf-admin-password
+                    key: password
               - name: "CF_ORG"
                 value: "test-brain-org"
               - name: "CF_SPACE"
@@ -287,7 +293,10 @@ spec:
               - name: "CREDHUB_CLIENT"
                 value: "credhub_admin_client"
               - name: "CREDHUB_SECRET"
-                value: "((credhub_admin_client_secret))"
+                valueFrom:
+                  secretKeyRef:
+                    name: var-credhub-admin-client-secret
+                    key: password
               {{- end }}
               - name: "CREDHUB_ENABLED"
                 value: "{{ .Values.features.credhub.enabled }}"
@@ -320,9 +329,12 @@ spec:
               - name: "AUTOSCALER_ENABLED"
                 value: "{{ .Values.features.autoscaler.enabled }}"
               - name: "APPS_DOMAIN"
-                value: "((system_domain))"
+                valueFrom:
+                  secretKeyRef:
+                    name: var-system-domain
+                    key: value
               - name: "AUTOSCALER_URL"
-                value: "https://autoscaler.((system_domain))"
+                value: "https://autoscaler.$(CF_DOMAIN)"
               - name: "EXCLUDE"
                 value: ""
               - name: "IN_ORDER"
