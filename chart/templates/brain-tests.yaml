@@ -260,10 +260,6 @@ spec:
     spec:
       template:
         spec:
-          dnsPolicy: "None"
-          dnsConfig:
-            nameservers:
-              - {{ printf "apps-dns.%s.svc" .Release.Namespace }}
           serviceAccountName: tests-brain
           containers:
           - command:
