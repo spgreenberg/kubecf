@@ -260,10 +260,6 @@ spec:
     spec:
       template:
         spec:
-          dnsPolicy: "None"
-          dnsConfig:
-            nameservers:
-              - {{ printf "apps-dns.%s.svc" .Release.Namespace }}
           serviceAccountName: tests-brain
           containers:
           - command:
@@ -278,6 +274,8 @@ spec:
                     key: value
               - name: "CF_TCP_DOMAIN"
                 value: "tcp.$(CF_DOMAIN)"
+              - name: "NAMESERVER"
+                value: {{ printf "apps-dns.%s.svc" .Release.Namespace | quote }}
               - name: "CF_USERNAME"
                 value: "admin"
               - name: "CF_PASSWORD"
